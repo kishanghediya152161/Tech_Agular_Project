@@ -1,0 +1,117 @@
+<div class="container mt-5">
+  <div class="card shadow">
+    <div class="card-header bg-primary text-white">
+      <h5 class="mb-0">Submit Story Request</h5>
+    </div>
+    <div class="card-body bg-light">
+      <form [formGroup]="saveStoryForm">
+
+        <div class="row g-3">
+
+          <!-- Key input -->
+          <div class="col-md-6">
+            <label for="key" class="form-label">Key:</label>
+            <input id="key" type="text" formControlName="key" class="form-control" placeholder="Enter key" />
+          </div>
+
+          <!-- Section Dropdown -->
+          <div class="col-md-6">
+            <label for="section" class="form-label">Section:</label>
+            <select id="section" formControlName="section" class="form-select">
+              <option value="">-- Select Section --</option>
+              <option value="arts">arts</option>
+              <option value="automobiles">automobiles</option>
+              <option value="books/review">books/review</option>
+              <option value="business">business</option>
+              <option value="fashion">fashion</option>
+            </select>
+            <small
+                    *ngIf="
+                      saveStoryForm
+                        .get('request.body.fiatAmount')
+                        ?.hasError('pattern') &&
+                        saveStoryForm.get('request.body.fiatAmount')?.touched
+                    "
+                  >
+                    <span class="text-danger"
+                      >Only positive amount is accepted.</span
+                    >
+                  </small>
+          </div>
+
+        </div>
+
+        <!-- Submit Button -->
+        <div class="mt-4 text-end">
+          <button type="button" (click)="onSubmit()" [disabled]="saveStoryForm.invalid" class="btn btn-primary">
+            Submit
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<div class="container mt-5">
+  <!-- Book list table component -->
+  <table class="table table-bordered table-striped">
+    <thead>
+      <tr>
+        <th>Title</th>
+        <th>Section</th>
+        <th>Subsection</th>
+      </tr>
+    </thead>
+    <tbody>
+      <ng-container *ngFor="let item of storyList">
+        <!-- Parent Row -->
+        <tr (click)="toggle(item)">
+          <td>{{ item.title }}</td>
+          <td>{{ item.section }}</td>
+          <td>{{ item.subsection }}</td>
+        </tr>
+
+        <!-- Child Row -->
+        <tr *ngIf="expandedItem === item">
+          <td colspan="3">
+            <table class="table table-bordered table-hover table-sm mb-0">
+              <tbody>
+                <tr>
+                  <td><strong>Byline:</strong></td>
+                  <td>{{ item.byline }}</td>
+                </tr>
+                <tr>
+                  <td><strong>Published Date:</strong></td>
+                  <td>{{ item.publishedDate | date: 'mediumDate' }}</td>
+                </tr>
+                <tr *ngIf="item.multimedia?.length">
+                  <td><strong>Image:</strong></td>
+                  <td>
+                    <img [src]="item.multimedia[0].url"
+                         alt="thumbnail"
+                         class="img-thumbnail"
+                         style="max-width: 200px;">
+                  </td>
+                </tr>
+                <tr *ngIf="!item.multimedia?.length">
+                  <td><strong>Image:</strong></td>
+                  <td>No image available</td>
+                </tr>
+              </tbody>
+            </table>
+          </td>
+        </tr>
+      </ng-container>
+    </tbody>
+  </table>
+
+
+  <app-dynamic-table
+  [currentPage]="currentPage"
+  [totalPages]="totalPages"
+  [itemsPerPage]="itemsPerPage"
+  (pageChange)="onPageChange($event)"
+>
+</app-dynamic-table>
+</div>
+

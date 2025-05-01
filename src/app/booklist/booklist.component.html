@@ -1,0 +1,81 @@
+<!-- <table class="table table-bordered table-striped table-hover">
+  <thead class="thead-dark">
+    <tr>
+
+      <th>Section</th>
+      <th>Subsection</th>
+      <th>Title</th>
+      <th>Byline</th>
+      <th>Published Date</th>
+    </tr>
+  </thead>
+  <tbody>
+
+
+    <tr *ngFor="let item of listData; let i = index" class="align-middle">
+      <td>{{ item.section }}</td>
+      <td>{{ item.subsection }}</td>
+      <td>{{ item.title }}</td>
+      <td>{{ item.byline }}</td>
+      <td>{{ item.publishedDate | date }}</td>
+    </tr>
+
+  </tbody>
+</table>
+
+
+
+
+ -->
+
+ <table class="table table-bordered table-striped">
+  <thead>
+    <tr>
+      <th>Title</th>
+      <th>Section</th>
+      <th>Subsection</th>
+    </tr>
+  </thead>
+  <tbody>
+    <ng-container *ngFor="let item of listData">
+      <!-- Parent Row -->
+      <tr (click)="toggle(item)">
+        <td>{{ item.title }}</td>
+        <td>{{ item.section }}</td>
+        <td>{{ item.subsection }}</td>
+      </tr>
+
+      <!-- Child Row -->
+      <tr *ngIf="expandedItem === item">
+        <td colspan="3">
+          <table class="table table-bordered table-hover table-sm mb-0">
+            <tbody>
+              <tr>
+                <td><strong>Byline:</strong></td>
+                <td>{{ item.byline }}</td>
+              </tr>
+              <tr>
+                <td><strong>Published Date:</strong></td>
+                <td>{{ item.publishedDate | date: 'mediumDate' }}</td>
+              </tr>
+              <tr *ngIf="item.multimedia?.length">
+                <td><strong>Image:</strong></td>
+                <td>
+                  <img [src]="item.multimedia[0].url"
+                       alt="thumbnail"
+                       class="img-thumbnail"
+                       style="max-width: 200px;">
+                </td>
+              </tr>
+              <tr *ngIf="!item.multimedia?.length">
+                <td><strong>Image:</strong></td>
+                <td>No image available</td>
+              </tr>
+            </tbody>
+          </table>
+        </td>
+      </tr>
+    </ng-container>
+  </tbody>
+</table>
+
